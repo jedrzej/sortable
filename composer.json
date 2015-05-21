@@ -1,0 +1,26 @@
+{
+  "name": "jedrzej/sortable",
+  "description": "Sortable trait for Laravel's Eloquent models",
+  "keywords": ["laravel", "sort", "sortable", "eloquent"],
+  "homepage": "https://github.com/jedrzej/sortable",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jędrzej Kuryło",
+      "email": "jedrzej.kurylo@gmail.com"
+    }
+  ],
+  "require": {
+    "laravel/framework": "*"
+  },
+  "require-dev": {
+    "codeception/codeception": "2.0.*",
+    "codeception/specify": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jedrzej\\": "src/Jedrzej/",
+      "Illuminate\\": "vendor/laravel/framework/src/Illuminate/"
+    }
+  }
+}
