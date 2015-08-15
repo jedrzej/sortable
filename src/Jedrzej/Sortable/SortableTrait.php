@@ -3,16 +3,10 @@
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 trait SortableTrait
 {
-    /**
-     * Should return list of sortable fields.
-     *
-     * @return array
-     */
-    abstract public function getSortableAttributes();
-
     /**
      * Applies filters.
      *
@@ -58,9 +52,9 @@ trait SortableTrait
      */
     protected function isFieldSortable(Builder $builder, $field)
     {
-        $sortable = $builder->getModel()->getSortableAttributes();
+        $sortable = $this->_getSortableAttributes($builder);
 
-        return in_array($field, $sortable);
+        return in_array($field, $sortable) || in_array('*', $sortable);
     }
 
     /**
@@ -74,5 +68,21 @@ trait SortableTrait
         foreach ($criteria as $criterion) {
             $criterion->apply($builder);
         }
+    }
+
+    /**
+     * @param Builder $builder
+     * @return array list of sortable attributes
+     */
+    protected function _getSortableAttributes(Builder $builder) {
+        if (method_exists($builder->getModel(), 'getSortableAttributes')) {
+            return $builder->getModel()->getSortableAttributes();
+        }
+
+        if (property_exists($builder->getModel(), 'sortable')) {
+            return $builder->getModel()->sortable;
+        }
+
+        throw new RuntimeException(sprintf('Model %s must either implement getSortableAttributes() or have $sortable property set', get_class($builder->getModel())));
     }
 }
