@@ -14,19 +14,31 @@ or run the following in the commandline in your project's root folder:
 
 ## Setting up sortable models
 
-In order to make an Eloquent model sortable, add the trait to the model and define a list of fields that the model can be sorted by:
+In order to make an Eloquent model sortable, add the trait to the model and define a list of fields that the model can be sorted by.
+You can either define a `$sortable` property or implement a `getSortableAttributes` method if you want to execute some logic to define
+list of sortable fields.
 
     use Jedrzej\Sortable\SortableTrait;
     
     class Post extends Eloquent
     {
         use SortableTrait;
-        
+
+        // either a property holding a list of sortable fields...
+        public $sortable = ['title', 'forum_id', 'created_at'];
+
+        // ...or a method that returns a list of sortable fields
         public function getSortableAttributes()
         {
             return ['title', 'forum_id', 'created_at'];
         }
     }
+
+In order to make all fields sortable put an asterisk `*` in the list of sortable fields:
+
+    public $sortable = ['*'];
+
+## Sorting models
 
 `SortableTrait` adds a `sorted()` scope to the model - you can pass it a query being an array of sorting conditions:
  
