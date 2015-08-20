@@ -7,17 +7,23 @@ use RuntimeException;
 
 trait SortableTrait
 {
+    protected $withParameterName = 'sort';
     /**
      * Applies filters.
      *
-     * @param Builder $builder query builder
-     * @param array   $query   query parameters to use for sorting - Input::all() is used by default
+     * @param Builder      $builder query builder
+     * @param array|string $query   query parameters to use for sorting - Input::all() is used by default
      */
-    public function scopeSorted(Builder $builder, array $query = [])
+    public function scopeSorted(Builder $builder, $query = [])
     {
-        $query = $query ?: Input::all();
+        $query = (array)($query ?: Input::input($this->withParameterName, []));
 
-        $criteria = $this->getCriteria($builder, (array)array_get($query, 'sort', []));
+        //unwrap sorting criteria array (for backwards compatibility)
+        if (is_array($query) && array_key_exists($this->withParameterName, $query)) {
+            $query = (array)$query[$this->withParameterName];
+        }
+
+        $criteria = $this->getCriteria($builder, $query);
         $this->applyCriteria($builder, $criteria);
     }
 
