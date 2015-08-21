@@ -2,20 +2,21 @@
 
 This package adds sorting functionality to Eloquent models in Laravel 4/5.
 
-You could also find those 2 packages useful:
+You could also find those packages useful:
 
 - [Searchable](https://github.com/jedrzej/searchable) - Allows filtering your models using request parameters
 - [Withable](https://github.com/jedrzej/withable) - Allows eager loading of relations using request parameters
+- [Pimpable](https://github.com/jedrzej/pimpable) - A meta package that combines Sortable, Searchable and Withable behaviours
 
 ## Composer install
 
 Add the following line to `composer.json` file in your project:
 
-    "jedrzej/sortable": "0.0.3"
+    "jedrzej/sortable": "0.0.4"
 	
 or run the following in the commandline in your project's root folder:	
 
-    composer require "jedrzej/sortable" "0.0.3"
+    composer require "jedrzej/sortable" "0.0.4"
 
 ## Setting up sortable models
 
