@@ -50,7 +50,13 @@ class Criterion
      */
     public function apply(Builder $builder)
     {
-        $builder->orderBy($this->getField(), $this->getOrder());
+        $sortMethod = 'sort' . studly_case($this->getField());
+
+        if(method_exists($builder->getModel(), $sortMethod)) {
+            call_user_func_array([$builder->getModel(), $sortMethod], [$builder, $this->getOrder()]);
+        } else {
+            $builder->orderBy($this->getField(), $this->getOrder());
+        }
     }
 
     /**
