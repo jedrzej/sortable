@@ -12,11 +12,11 @@ You could also find those packages useful:
 
 Add the following line to `composer.json` file in your project:
 
-    "jedrzej/sortable": "0.0.4"
+    "jedrzej/sortable": "0.0.5"
 	
 or run the following in the commandline in your project's root folder:	
 
-    composer require "jedrzej/sortable" "0.0.4"
+    composer require "jedrzej/sortable" "0.0.5"
 
 ## Setting up sortable models
 
@@ -65,6 +65,20 @@ In order to make all fields sortable put an asterisk `*` in the list of sortable
     ?sort[]=level,asc&sort[]=points,desc
     // and then calling
     User::sorted()->get();
+
+## Overwriting default sorting logic
+
+It is possible to overwrite how sorting parameters are used and applied to the query by implementing a callback in your
+model named `sortFieldName`, e.g.:
+
+    // return all posts sorted by creation date in descending order
+    Post::sorted('created_at,desc')->get();
+
+    // in model class overwrite the sorting logic so that 'created' field is used instead of 'created_at'
+    public function sortCreatedAt($query, $direction = 'desc')
+    {
+        return $query->orderBy('created', $direction);
+    }
 
 ## Additional configuration
 

@@ -62,9 +62,8 @@ class SortableTraitTest extends Test
         });
 
         $this->specify('available callback method is used in lieu of standard sorting', function() {
-            $criteria = (array)TestModelWithSortableCallbackMethod::sorted(['name,desc'])->getQuery()->orders;
-
-            $this->assertEquals('real_name', $criteria[0]['column']);
+            $criteria = (array)TestModelWithSortableCallbackMethod::sorted(['created_at,desc'])->getQuery()->orders;
+            $this->assertEquals('created', $criteria[0]['column']);
             $this->assertEquals('desc', $criteria[0]['direction']);
         });
     }

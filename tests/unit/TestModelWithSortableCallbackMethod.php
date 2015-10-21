@@ -2,17 +2,17 @@
 
 class TestModelWithSortableCallbackMethod extends TestModel
 {
-    protected $sortable = ['name'];
+    protected $sortable = ['created_at'];
 
     /**
-     * Sorts by the "real_name" field.  Accessed by sorting "name".
+     * Sorts by the "created" field.  Accessed by sorting "created_at".
      *
      * @param $query
      * @param string $direction
      * @return mixed
      */
-    public function sortName($query, $direction = 'desc')
+    public function sortCreatedAt($query, $direction = 'desc')
     {
-        return $query->orderBy('real_name', $direction);
+        return $query->orderBy('created', $direction);
     }
 }
