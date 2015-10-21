@@ -60,5 +60,12 @@ class SortableTraitTest extends Test
             $this->assertEquals('field2', $criteria[0]['column']);
             $this->assertEquals('field42', $criteria[1]['column']);
         });
+
+        $this->specify('available callback method is used in lieu of standard sorting', function() {
+            $criteria = (array)TestModelWithSortableCallbackMethod::sorted(['name,desc'])->getQuery()->orders;
+
+            $this->assertEquals('real_name', $criteria[0]['column']);
+            $this->assertEquals('desc', $criteria[0]['direction']);
+        });
     }
 }
