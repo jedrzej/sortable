@@ -7,7 +7,9 @@ use RuntimeException;
 
 trait SortableTrait
 {
-    protected $sortParameterName = 'sort';
+    protected $sortParameterName    = 'sort';
+    protected $defaultSortAttribute;
+
     /**
      * Applies filters.
      *
@@ -17,6 +19,10 @@ trait SortableTrait
     public function scopeSorted(Builder $builder, $query = [])
     {
         $query = (array)($query ?: Input::input($this->sortParameterName, []));
+
+        if (empty($query) && isset($this->defaultSortAttribute)) {
+            $query = (array)$this->defaultSortAttribute;
+        }
 
         //unwrap sorting criteria array (for backwards compatibility)
         if (is_array($query) && array_key_exists($this->sortParameterName, $query)) {
@@ -78,9 +84,11 @@ trait SortableTrait
 
     /**
      * @param Builder $builder
+     *
      * @return array list of sortable attributes
      */
-    protected function _getSortableAttributes(Builder $builder) {
+    protected function _getSortableAttributes(Builder $builder)
+    {
         if (method_exists($builder->getModel(), 'getSortableAttributes')) {
             return $builder->getModel()->getSortableAttributes();
         }
