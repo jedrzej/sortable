@@ -23,7 +23,8 @@
   },
   "require-dev": {
     "codeception/codeception": "2.0.*",
-    "codeception/specify": "*"
+    "codeception/specify": "*",
+    "mockery/mockery": "*"
   },
   "suggest": {
     "jedrzej/searchable": "Allows filtering your models using request parameters",

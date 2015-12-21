@@ -2,6 +2,7 @@
 
 use Codeception\Specify;
 use Codeception\TestCase\Test;
+use Illuminate\Support\Facades\Input;
 
 class SortableTraitTest extends Test
 {
@@ -65,6 +66,15 @@ class SortableTraitTest extends Test
             $criteria = (array)TestModelWithSortableCallbackMethod::sorted(['created_at,desc'])->getQuery()->orders;
             $this->assertEquals('created', $criteria[0]['column']);
             $this->assertEquals('desc', $criteria[0]['direction']);
+        });
+
+        $this->specify('default sorting criteria are applued', function() {
+            Input::shouldReceive('input')->andReturn(null);
+            $criteria = (array)TestModelWithDefaultSortingCriteria::sorted()->getQuery()->orders;
+            $this->assertEquals('column1', $criteria[0]['column']);
+            $this->assertEquals('desc', $criteria[0]['direction']);
+            $this->assertEquals('column2', $criteria[1]['column']);
+            $this->assertEquals('asc', $criteria[1]['direction']);
         });
     }
 }

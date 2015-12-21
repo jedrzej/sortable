@@ -2,21 +2,29 @@
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Str;
 use RuntimeException;
 
 trait SortableTrait
 {
     protected $sortParameterName = 'sort';
+
+    protected $defaultSortCriteria = [];
+
     /**
      * Applies filters.
      *
-     * @param Builder      $builder query builder
-     * @param array|string $query   query parameters to use for sorting - Input::all() is used by default
+     * @param Builder $builder query builder
+     * @param array|string $query query parameters to use for sorting - $request[$this->sortParameterName] is used by default
+     *                            with fallback to $this->defaultSortCriteria if $this->sortParameterName parameter is missing
+     *                            in the request parameters
      */
     public function scopeSorted(Builder $builder, $query = [])
     {
-        $query = (array)($query ?: Input::input($this->sortParameterName, []));
+        $query = (array)($query ?: Input::input($this->sortParameterName, $this->defaultSortCriteria));
+
+        if (empty($query)) {
+            $query = $this->defaultSortCriteria;
+        }
 
         //unwrap sorting criteria array (for backwards compatibility)
         if (is_array($query) && array_key_exists($this->sortParameterName, $query)) {
@@ -31,7 +39,7 @@ trait SortableTrait
      * Builds sort criteria based on model's sortable fields and query parameters.
      *
      * @param Builder $builder query builder
-     * @param array   $query   query parameters
+     * @param array $query query parameters
      *
      * @return array
      */
@@ -52,7 +60,7 @@ trait SortableTrait
      * Check if field is sortable for given model.
      *
      * @param Builder $builder query builder
-     * @param string  $field   field name
+     * @param string $field field name
      *
      * @return bool
      */
@@ -66,7 +74,7 @@ trait SortableTrait
     /**
      * Applies criteria to query
      *
-     * @param Builder     $builder  query builder
+     * @param Builder $builder query builder
      * @param Criterion[] $criteria sorting criteria
      */
     protected function applyCriteria(Builder $builder, array $criteria)
@@ -78,9 +86,11 @@ trait SortableTrait
 
     /**
      * @param Builder $builder
+     *
      * @return array list of sortable attributes
      */
-    protected function _getSortableAttributes(Builder $builder) {
+    protected function _getSortableAttributes(Builder $builder)
+    {
         if (method_exists($builder->getModel(), 'getSortableAttributes')) {
             return $builder->getModel()->getSortableAttributes();
         }
