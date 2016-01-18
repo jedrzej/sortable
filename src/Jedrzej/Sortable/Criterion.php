@@ -96,8 +96,12 @@ class Criterion
      */
     protected static function parseFieldAndOrder($value)
     {
-        if (preg_match('/^([^,]+),(asc|desc)$/', $value, $match)) {
-            return [$match[1], $match[2]];
+        if (preg_match('/^([^,]+)(,(asc|desc))?$/', $value, $match)) {
+            if (!(isset($match[3]) && $sortDir = $match[3])) {
+                $sortDir = 'asc';
+            }
+
+            return [$match[1], $sortDir];
         }
 
         throw new InvalidArgumentException(sprintf('Unable to parse field name or order from "%s"', $value));
