@@ -12,11 +12,11 @@ You could also find those packages useful:
 
 Add the following line to `composer.json` file in your project:
 
-    "jedrzej/sortable": "0.0.7"
+    "jedrzej/sortable": "0.0.8"
 
 or run the following in the commandline in your project's root folder:
 
-    composer require "jedrzej/sortable" "0.0.7"
+    composer require "jedrzej/sortable" "0.0.8"
 
 ## Setting up sortable models
 

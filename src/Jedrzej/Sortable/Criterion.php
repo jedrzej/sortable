@@ -82,7 +82,7 @@ class Criterion
      */
     protected static function prepareValue($value)
     {
-        return trim($value, ", \t\n\r\0\x0B");
+        return trim($value, " \t\n\r\0\x0B");
     }
 
     /**
@@ -97,11 +97,8 @@ class Criterion
     protected static function parseFieldAndOrder($value)
     {
         if (preg_match('/^([^,]+)(,(asc|desc))?$/', $value, $match)) {
-            if (!(isset($match[3]) && $sortDir = $match[3])) {
-                $sortDir = 'asc';
-            }
+            return [$match[1], isset($match[3]) ? $match[3] : static::ORDER_ASCENDING];
 
-            return [$match[1], $sortDir];
         }
 
         throw new InvalidArgumentException(sprintf('Unable to parse field name or order from "%s"', $value));

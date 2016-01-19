@@ -17,14 +17,12 @@ class CriterionTest extends Test
             $this->assertEquals('desc', Criterion::make('cde,desc')->getOrder());
         });
 
-        $this->specify("incorrect value results in exception being thrown", function () {
-            try {
-                Criterion::make('abc');
-                $this->fail('Expected exception was not thrown');
-            } catch (InvalidArgumentException $e) {
-                //
-            }
+        $this->specify("ascending order is used by default", function () {
+            $this->assertEquals('abc', Criterion::make('abc')->getField());
+            $this->assertEquals('asc', Criterion::make('abc')->getOrder());
+        });
 
+        $this->specify("incorrect value results in exception being thrown", function () {
             try {
                 Criterion::make('a,b,c');
                 $this->fail('Expected exception was not thrown');
