@@ -47,7 +47,11 @@ trait SortableTrait
     {
         $criteria = [];
         foreach ($query as $value) {
-            $criterion = Criterion::make($value);
+            // default sort order when no order explicitly given in query
+            // user can override this to any default nature they want
+            // either asc to desc
+            // protected $defaultSortOrder = 'desc' or 'asc';
+            $criterion = Criterion::make($value, isset($this->defaultSortOrder) ? $this->defaultSortOrder : Criterion::ORDER_ASCENDING);
             if ($this->isFieldSortable($builder, $criterion->getField())) {
                 $criteria[] = $criterion;
             }

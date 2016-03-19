@@ -96,6 +96,18 @@ passed to `sorted` method of your model. Default sorting criteria should be defi
 protected $defaultSortCriteria = 'created_at,desc';
 ```
 
+## Defining default sorting order
+
+By default asc is considered as default sorting order. It is possible to define default sorting order that will be used if no sorting order is provided in the request or
+passed to `sorted` method of your model. Default sorting order should be defined in $defaultSortOrder property, e.g.:
+
+```php
+// sort in desc order by default if no order is specified in request
+protected $defaultSortOrder = 'desc';
+// sort in asc order by default if no order is specified in request
+protected $defaultSortOrder = 'asc';
+```
+
 ## Additional configuration
 
  If you are using `sort` request parameter for other purpose, you can change the name of the parameter that will be
