@@ -68,13 +68,28 @@ class SortableTraitTest extends Test
             $this->assertEquals('desc', $criteria[0]['direction']);
         });
 
-        $this->specify('default sorting criteria are applued', function() {
+        $this->specify('default sorting criteria are applied', function() {
+            Input::clearResolvedInstances();
             Input::shouldReceive('input')->andReturn(null);
             $criteria = (array)TestModelWithDefaultSortingCriteria::sorted()->getQuery()->orders;
             $this->assertEquals('column1', $criteria[0]['column']);
             $this->assertEquals('desc', $criteria[0]['direction']);
             $this->assertEquals('column2', $criteria[1]['column']);
             $this->assertEquals('asc', $criteria[1]['direction']);
+        });
+
+        $this->specify('default sorting order is applied', function() {
+            Input::clearResolvedInstances();
+            Input::shouldReceive('input')->andReturn(['sort' => 'column1']);
+            $criteria = (array)TestModelWithDefaultSortOrder::sorted()->getQuery()->orders;
+            $this->assertEquals('column1', $criteria[0]['column']);
+            $this->assertEquals('desc', $criteria[0]['direction']);
+
+            Input::clearResolvedInstances();
+            Input::shouldReceive('input')->andReturn(['sort' => 'column1']);
+            $criteria = (array)TestModelWithAllFieldsSortable::sorted()->getQuery()->orders;
+            $this->assertEquals('column1', $criteria[0]['column']);
+            $this->assertEquals('asc', $criteria[0]['direction']);
         });
     }
 }

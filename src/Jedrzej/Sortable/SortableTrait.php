@@ -6,29 +6,25 @@ use RuntimeException;
 
 trait SortableTrait
 {
-    protected $sortParameterName = 'sort';
-
-    protected $defaultSortCriteria = [];
-
     /**
      * Applies filters.
      *
      * @param Builder $builder query builder
-     * @param array|string $query query parameters to use for sorting - $request[$this->sortParameterName] is used by default
-     *                            with fallback to $this->defaultSortCriteria if $this->sortParameterName parameter is missing
+     * @param array|string $query query parameters to use for sorting - $request[$this->_getSortParameterName()] is used by default
+     *                            with fallback to $this->defaultSortCriteria if $this->_getSortParameterName() parameter is missing
      *                            in the request parameters
      */
     public function scopeSorted(Builder $builder, $query = [])
     {
-        $query = (array)($query ?: Input::input($this->sortParameterName, $this->defaultSortCriteria));
+        $query = (array)($query ?: Input::input($this->_getSortParameterName(), $this->_getDefaultSortCriteria()));
 
         if (empty($query)) {
-            $query = $this->defaultSortCriteria;
+            $query = $this->_getDefaultSortCriteria();
         }
 
         //unwrap sorting criteria array (for backwards compatibility)
-        if (is_array($query) && array_key_exists($this->sortParameterName, $query)) {
-            $query = (array)$query[$this->sortParameterName];
+        if (is_array($query) && array_key_exists($this->_getSortParameterName(), $query)) {
+            $query = (array)$query[$this->_getSortParameterName()];
         }
 
         $criteria = $this->getCriteria($builder, $query);
@@ -47,11 +43,7 @@ trait SortableTrait
     {
         $criteria = [];
         foreach ($query as $value) {
-            // default sort order when no order explicitly given in query
-            // user can override this to any default nature they want
-            // either asc to desc
-            // protected $defaultSortOrder = 'desc' or 'asc';
-            $criterion = Criterion::make($value, isset($this->defaultSortOrder) ? $this->defaultSortOrder : Criterion::ORDER_ASCENDING);
+            $criterion = Criterion::make($value, $this->_getDefaultSortOrder());
             if ($this->isFieldSortable($builder, $criterion->getField())) {
                 $criteria[] = $criterion;
             }
@@ -104,5 +96,17 @@ trait SortableTrait
         }
 
         throw new RuntimeException(sprintf('Model %s must either implement getSortableAttributes() or have $sortable property set', get_class($builder->getModel())));
+    }
+
+    protected function _getSortParameterName() {
+        return isset($this->sortParameterName) ? $this->sortParameterName : 'sort';
+    }
+
+    protected function _getDefaultSortCriteria() {
+        return isset($this->defaultSortCriteria) ? $this->defaultSortCriteria : [];
+    }
+
+    protected function _getDefaultSortOrder() {
+        return isset($this->defaultSortOrder) ? $this->defaultSortOrder : Criterion::ORDER_ASCENDING;
     }
 }
