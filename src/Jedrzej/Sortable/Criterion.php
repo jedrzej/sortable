@@ -32,13 +32,14 @@ class Criterion
      * Creates criterion object for given value.
      *
      * @param string $value query value
+     * @param string $defaultOrder default sort order if order is not given explicitly in query
      *
      * @return Criterion
      */
-    public static function make($value)
+    public static function make($value, $defaultOrder = self::ORDER_ASCENDING)
     {
         $value = static::prepareValue($value);
-        list($field, $order) = static::parseFieldAndOrder($value);
+        list($field, $order) = static::parseFieldAndOrder($value, $defaultOrder);
 
         return new static($field, $order);
     }
@@ -89,15 +90,16 @@ class Criterion
      * Parse query parameter and get field name and order.
      *
      * @param string $value
+     * @param string $defaultOrder default sort order if order is not given explicitly in query
      *
      * @return string[]
      *
      * @throws InvalidArgumentException when unable to parse field name or order
      */
-    protected static function parseFieldAndOrder($value)
+    protected static function parseFieldAndOrder($value, $defaultOrder)
     {
         if (preg_match('/^([^,]+)(,(asc|desc))?$/', $value, $match)) {
-            return [$match[1], isset($match[3]) ? $match[3] : static::ORDER_ASCENDING];
+            return [$match[1], isset($match[3]) ? $match[3] : $defaultOrder];
 
         }
 

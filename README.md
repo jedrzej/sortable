@@ -12,11 +12,11 @@ You could also find those packages useful:
 
 Add the following line to `composer.json` file in your project:
 
-    "jedrzej/sortable": "0.0.8"
+    "jedrzej/sortable": "0.0.9"
 
 or run the following in the commandline in your project's root folder:
 
-    composer require "jedrzej/sortable" "0.0.8"
+    composer require "jedrzej/sortable" "0.0.9"
 
 ## Setting up sortable models
 
@@ -59,18 +59,19 @@ Post::sorted('created_at,desc')->get();
 // return all users sorted by level in ascending order and then by points indescending orders
 User::sorted(['level,asc', 'points,desc'])->get();
 ```
-or it will use `Input::all()` as default:
+or it will use `sort` parameter from the request as default:
 
-    // return all posts sorted by creation date in descending order by appending to URL
-    ?sort=created_at,desc
-    //and then calling
-    Post::sorted()->get();
+```php   
+// return all posts sorted by creation date in descending order by appending to URL
+?sort=created_at,desc
+//and then calling
+Post::sorted()->get();
 
-    // return all users sorted by level in ascending order and then by points indescending orders by appending to URL
-    ?sort[]=level,asc&sort[]=points,desc
-    // and then calling
-    User::sorted()->get();
-
+// return all users sorted by level in ascending order and then by points indescending orders by appending to URL
+?sort[]=level,asc&sort[]=points,desc
+// and then calling
+User::sorted()->get();
+```
 ## Overwriting default sorting logic
 
 It is possible to overwrite how sorting parameters are used and applied to the query by implementing a callback in your
@@ -93,7 +94,19 @@ passed to `sorted` method of your model. Default sorting criteria should be defi
 
 ```php
 // sort by latest first
-protected $defaultSortCriteria = 'created_at,desc';
+protected $defaultSortCriteria = ['created_at,desc'];
+```
+
+## Defining default sorting order
+
+By default asc is considered as default sorting order. It is possible to define default sorting order that will be used if no sorting order is provided in the request or
+passed to `sorted` method of your model. Default sorting order should be defined in $defaultSortOrder property, e.g.:
+
+```php
+// sort in desc order by default if no order is specified in request
+protected $defaultSortOrder = 'desc';
+// sort in asc order by default if no order is specified in request
+protected $defaultSortOrder = 'asc';
 ```
 
 ## Additional configuration
