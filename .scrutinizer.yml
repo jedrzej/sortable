@@ -9,9 +9,6 @@ build:
     tests:
         before:
             - 'vendor/codeception/codeception/codecept build'
-            - 'vendor/codeception/codeception/codecept run --coverage --xml'
-            - 'wget https://scrutinizer-ci.com/ocular.phar'
-            - 'php ocular.phar code-coverage:upload --repository=g/jedrzej/sortable --format=php-clover tests/_output/report.xml'
 checks:
     php:
         verify_property_names: true
