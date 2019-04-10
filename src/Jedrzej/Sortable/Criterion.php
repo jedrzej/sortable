@@ -41,6 +41,8 @@ class Criterion
         $value = static::prepareValue($value);
         list($field, $order) = static::parseFieldAndOrder($value, $defaultOrder);
 
+        static::validateFieldName($field);
+
         return new static($field, $order);
     }
 
@@ -72,6 +74,17 @@ class Criterion
 
         $this->field = $field;
         $this->order = $order;
+    }
+
+    /**
+     * Makes sure field names contain only allowed characters
+     *
+     * @param string $fieldName
+     */
+    protected static function validateFieldName($fieldName) {
+        if (!preg_match('/^[a-zA-Z0-9\-_:]+$/', $fieldName)) {
+            throw new InvalidArgumentException(sprintf('Incorrect field name: %s', $fieldName));
+        }
     }
 
     /**
