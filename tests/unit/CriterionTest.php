@@ -15,6 +15,11 @@ class CriterionTest extends Test
             $this->assertEquals('cde', Criterion::make('cde,desc')->getField());
             $this->assertEquals('asc', Criterion::make('abc,asc')->getOrder());
             $this->assertEquals('desc', Criterion::make('cde,desc')->getOrder());
+            $this->assertEquals('a.b', Criterion::make('a.b,asc')->getField());
+            $this->assertEquals('a_b', Criterion::make('a_b,asc')->getField());
+            $this->assertEquals('a-b', Criterion::make('a-b,asc')->getField());
+            $this->assertEquals('a:b', Criterion::make('a:b,asc')->getField());
+
         });
 
         $this->specify("ascending order is used by default", function () {

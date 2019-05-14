@@ -82,7 +82,7 @@ class Criterion
      * @param string $fieldName
      */
     protected static function validateFieldName($fieldName) {
-        if (!preg_match('/^[a-zA-Z0-9\-_:]+$/', $fieldName)) {
+        if (!preg_match('/^[a-zA-Z0-9\-_:\.]+$/', $fieldName)) {
             throw new InvalidArgumentException(sprintf('Incorrect field name: %s', $fieldName));
         }
     }
