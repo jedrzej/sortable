@@ -1,7 +1,6 @@
 <?php namespace Jedrzej\Sortable;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Input;
 use RuntimeException;
 
 trait SortableTrait
@@ -16,7 +15,7 @@ trait SortableTrait
      */
     public function scopeSorted(Builder $builder, $query = [])
     {
-        $query = (array)($query ?: Input::input($this->_getSortParameterName(), $this->_getDefaultSortCriteria()));
+        $query = (array)($query ?: request()->input($this->_getSortParameterName(), $this->_getDefaultSortCriteria()));
 
         if (empty($query)) {
             $query = $this->_getDefaultSortCriteria();

@@ -1,6 +1,7 @@
 <?php namespace Jedrzej\Sortable;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class Criterion
@@ -53,7 +54,7 @@ class Criterion
      */
     public function apply(Builder $builder)
     {
-        $sortMethod = 'sort' . studly_case($this->getField());
+        $sortMethod = 'sort' . Str::studly($this->getField());
 
         if(method_exists($builder->getModel(), $sortMethod)) {
             call_user_func_array([$builder->getModel(), $sortMethod], [$builder, $this->getOrder()]);
