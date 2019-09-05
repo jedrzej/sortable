@@ -1,12 +1,13 @@
 <?php
 
 use Codeception\Specify;
+use Codeception\AssertThrows;
 use Codeception\TestCase\Test;
-use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Request;
 
 class SortableTraitTest extends Test
 {
-    use Specify;
+    use Specify, AssertThrows;
 
     public function testCriteria()
     {
@@ -53,8 +54,10 @@ class SortableTraitTest extends Test
         });
 
         $this->specify('model must implement getSortableAttributes() or have $sortable property', function() {
-            TestModel::sorted(['field1,desc', 'field2,desc']);
-        }, ['throws' => new RuntimeException]);
+            $this->assertThrows(RuntimeException::class, function() {
+                TestModel::sorted(['field1,desc', 'field2,desc']);
+            });
+        });
 
         $this->specify('* in searchable field list makes all fields searchable', function() {
             $criteria = (array)TestModelWithAllFieldsSortable::sorted(['field2,desc', 'field42,desc'])->getQuery()->orders;
@@ -69,8 +72,8 @@ class SortableTraitTest extends Test
         });
 
         $this->specify('default sorting criteria are applied', function() {
-            Input::clearResolvedInstances();
-            Input::shouldReceive('input')->andReturn(null);
+            Request::clearResolvedInstances();
+            Request::shouldReceive('input')->andReturn(null);
             $criteria = (array)TestModelWithDefaultSortingCriteria::sorted()->getQuery()->orders;
             $this->assertEquals('column1', $criteria[0]['column']);
             $this->assertEquals('desc', $criteria[0]['direction']);
@@ -79,14 +82,14 @@ class SortableTraitTest extends Test
         });
 
         $this->specify('default sorting order is applied', function() {
-            Input::clearResolvedInstances();
-            Input::shouldReceive('input')->andReturn(['sort' => 'column1']);
+            Request::clearResolvedInstances();
+            Request::shouldReceive('input')->andReturn(['sort' => 'column1']);
             $criteria = (array)TestModelWithDefaultSortOrder::sorted()->getQuery()->orders;
             $this->assertEquals('column1', $criteria[0]['column']);
             $this->assertEquals('desc', $criteria[0]['direction']);
 
-            Input::clearResolvedInstances();
-            Input::shouldReceive('input')->andReturn(['sort' => 'column1']);
+            Request::clearResolvedInstances();
+            Request::shouldReceive('input')->andReturn(['sort' => 'column1']);
             $criteria = (array)TestModelWithAllFieldsSortable::sorted()->getQuery()->orders;
             $this->assertEquals('column1', $criteria[0]['column']);
             $this->assertEquals('asc', $criteria[0]['direction']);

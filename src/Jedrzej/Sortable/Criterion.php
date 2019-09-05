@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Eloquent\Builder;
 use InvalidArgumentException;
+use Illuminate\Support\Str;
 
 class Criterion
 {
@@ -53,7 +54,7 @@ class Criterion
      */
     public function apply(Builder $builder)
     {
-        $sortMethod = 'sort' . studly_case($this->getField());
+        $sortMethod = 'sort' . Str::studly($this->getField());
 
         if(method_exists($builder->getModel(), $sortMethod)) {
             call_user_func_array([$builder->getModel(), $sortMethod], [$builder, $this->getOrder()]);

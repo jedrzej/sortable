@@ -1,6 +1,6 @@
 # Sortable trait for Laravel's Eloquent models
 
-This package adds sorting functionality to Eloquent models in Laravel 4/5.
+This package adds sorting functionality to Eloquent models in Laravel 4/5/6.
 
 You could also find those packages useful:
 
@@ -12,11 +12,11 @@ You could also find those packages useful:
 
 Add the following line to `composer.json` file in your project:
 
-    "jedrzej/sortable": "0.0.11"
+    "jedrzej/sortable": "0.0.12"
 
 or run the following in the commandline in your project's root folder:
 
-    composer require "jedrzej/sortable" "0.0.11"
+    composer require "jedrzej/sortable" "0.0.12"
 
 ## Setting up sortable models
 
